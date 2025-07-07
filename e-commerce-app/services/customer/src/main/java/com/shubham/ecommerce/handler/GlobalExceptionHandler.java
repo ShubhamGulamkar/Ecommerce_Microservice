@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
                 .body(exp.getMsg());
     }
 
-    @ExceptionHandler(CustomerNotFoundException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException exp)
     {
         var errors = new HashMap<String , String >();
