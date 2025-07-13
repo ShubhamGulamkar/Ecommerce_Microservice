@@ -1,5 +1,7 @@
 package com.shubham.ecommerce.payment;
 
+import com.shubham.ecommerce.notification.NotificationProducer;
+import com.shubham.ecommerce.notification.PaymentNotificationRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,20 @@ public class PaymentService {
 
     private final PaymentMapper mapper;
 
+    private final NotificationProducer notificationProducer;
+
     public Integer createPayment(@Valid PaymentRequest request) {
         var payment = repository.save(mapper.toPayment(request));
-
-        return null;
+        notificationProducer.sendNotification(
+                new PaymentNotificationRequest(
+                        request.orderReference(),
+                        request.amount(),
+                        request.paymentMethod(),
+                        request.customer().firstname(),
+                        request.customer().lastname(),
+                        request.customer().email()
+                        )
+        );
+        return payment.getId();
     }
 }

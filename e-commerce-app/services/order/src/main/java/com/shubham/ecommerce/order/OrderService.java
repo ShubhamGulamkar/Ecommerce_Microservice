@@ -6,6 +6,8 @@ import com.shubham.ecommerce.kafka.OrderConfirmation;
 import com.shubham.ecommerce.kafka.OrderProducer;
 import com.shubham.ecommerce.orderline.OrderLineRequest;
 import com.shubham.ecommerce.orderline.OrderLineService;
+import com.shubham.ecommerce.payment.PaymentClient;
+import com.shubham.ecommerce.payment.PaymentRequest;
 import com.shubham.ecommerce.product.ProductClient;
 import com.shubham.ecommerce.product.PurchaseRequest;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +34,8 @@ public class OrderService {
 
     private final OrderProducer orderProducer;
 
+    private final PaymentClient paymentClient;
+
 
     public Integer CreateOrder(@Valid OrderRequest request) {
 
@@ -54,6 +58,14 @@ public class OrderService {
             );
         }
 
+        var paymentRequest = new PaymentRequest(
+                request.amount(),
+                request.paymentMethod(),
+                order.getId(),
+                order.getReference(),
+                customer
+        );
+        paymentClient.requestOrderPayment(paymentRequest);
 
         orderProducer.sendOrderConfirmation(
                 new OrderConfirmation(

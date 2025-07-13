@@ -1,0 +1,15 @@
+package com.shubham.ecommerce.kafka.order;
+
+import com.shubham.ecommerce.kafka.payment.PaymentMethod;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public record OrderConfirmation(
+        String order,
+        BigDecimal totalAmount,
+        PaymentMethod paymentMethod,
+        Customer customer,
+        List<Product> products
+) {
+}
