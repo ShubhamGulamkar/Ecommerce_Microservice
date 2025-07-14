@@ -1,6 +1,6 @@
 package com.shubham.ecommerce.notification;
 
 public enum NotificationType {
-    ORDER_CONFIGURATION,
-    PAYMENT_CONFIGURATION
+    ORDER_CONFIRMATION,
+    PAYMENT_CONFIRMATION
 }
